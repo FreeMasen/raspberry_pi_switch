@@ -1,0 +1,12 @@
+[package]
+name = "light-switch"
+version = "0.1.0"
+authors = ["rfm <r@robertmasen.pizza>"]
+edition = "2018"
+
+[dependencies]
+druid = "0.4"
+warmy = { version = "0.13", features = ["toml-impl", "arc"] }
+serde = { version = "1", features = ["derive"] }
+dirs = "2"
+crossbeam = "0.7"
