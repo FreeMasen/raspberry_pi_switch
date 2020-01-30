@@ -10,3 +10,4 @@ warmy = { version = "0.13", features = ["toml-impl", "arc"] }
 serde = { version = "1", features = ["derive"] }
 dirs = "2"
 crossbeam = "0.7"
+amiquip = "0.3.3"
