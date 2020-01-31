@@ -1,3 +1,4 @@
+#[cfg(feature = "switch")]
 use druid::Data;
 use serde::Deserialize;
 use warmy::{toml::Toml, Res, SimpleKey, Store, StoreOpt};
@@ -28,7 +29,8 @@ pub struct RabbitConfig {
     pub url: String,
 }
 
-#[derive(Debug, Deserialize, Data, Clone)]
+#[derive(Debug, Deserialize, Clone)]
+#[cfg_attr(feature = "switch", derive(Data))]
 pub struct Switch {
     pub name: String,
     pub on_code: u32,

@@ -5,12 +5,17 @@ authors = ["rfm <r@robertmasen.pizza>"]
 edition = "2018"
 
 [dependencies]
-druid = "0.4"
+druid = { version = "0.4", optional = true }
 warmy = { version = "0.13", features = ["toml-impl", "arc"] }
 serde = { version = "1", features = ["derive"] }
 dirs = "2"
-crossbeam = "0.7"
+crossbeam = { version = "0.7", optional = true }
 amiquip = "0.3.3"
+
+[features]
+default = []
+flipper = []
+switch = ["druid", "crossbeam"]
 
 [workspace]
 members = [
