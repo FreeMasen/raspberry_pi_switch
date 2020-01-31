@@ -1,6 +1,6 @@
-use warmy::{Store, Res, StoreOpt, SimpleKey, toml::Toml};
-use serde::Deserialize;
 use druid::Data;
+use serde::Deserialize;
+use warmy::{toml::Toml, Res, SimpleKey, Store, StoreOpt};
 pub fn get_config() -> Result<Res<Config>, String> {
     let ctx = &mut ();
     let home_dir = if let Some(home_dir) = dirs::home_dir() {
@@ -17,7 +17,6 @@ pub fn get_config() -> Result<Res<Config>, String> {
         .map_err(|e| format!("failed to get config from store {}", e))?;
     Ok(resource)
 }
-
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Config {

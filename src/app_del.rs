@@ -1,10 +1,8 @@
 use crossbeam::channel::Sender;
-use druid::{
-    AppDelegate, DelegateCtx, Env, Event, WindowId,
-};
+use druid::{AppDelegate, DelegateCtx, Env, Event, WindowId};
 use warmy::Res;
 
-use super::{ViewState, Config};
+use crate::{config::Config, view_state::ViewState};
 pub struct Del {
     pub resource: Res<Config>,
     pub tx: Sender<u32>,

@@ -1,10 +1,14 @@
+use crate::{config::Switch, view_state::ViewState};
 use druid::{
+    widget::{Button, Flex, Padding},
     Env, Widget,
-    widget::{Button, Flex, Padding}
 };
-use super::{ViewState, Switch};
 pub fn setup_window(config: ViewState) -> impl Widget<ViewState> {
-    let buttons = config.switches.iter().map(setup_button_group).collect::<Vec<_>>();
+    let buttons = config
+        .switches
+        .iter()
+        .map(setup_button_group)
+        .collect::<Vec<_>>();
     let mut rows = Vec::new();
     match buttons.len() {
         1 | 2 | 3 => {
@@ -13,7 +17,7 @@ pub fn setup_window(config: ViewState) -> impl Widget<ViewState> {
                 row.add_child(button, 1.0);
             }
             rows.push(row);
-        },
+        }
         4 | 6 => {
             let top = buttons.len() / 2;
             let mut b = buttons.into_iter();
@@ -26,7 +30,7 @@ pub fn setup_window(config: ViewState) -> impl Widget<ViewState> {
                 }
                 rows.push(row);
             }
-        },
+        }
         5 => {
             let mut b = buttons.into_iter();
             for _ in 0..2 {

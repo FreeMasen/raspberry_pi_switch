@@ -1,5 +1,5 @@
+use crate::config::Switch;
 use druid::Data;
-use super::Switch;
 
 #[derive(Debug, Clone)]
 pub struct ViewState {

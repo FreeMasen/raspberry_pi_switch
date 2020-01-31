@@ -2,23 +2,15 @@ use druid::{
     AppLauncher, WindowDesc
 };
 
-mod app_del;
-mod config;
-mod rabbit;
-mod ui_setup;
-mod view_state;
 
-use app_del::Del;
-pub use config::{
-    Config,
-    Switch,
-};
-pub use view_state::ViewState;
+
+use lights::app_del::Del;
+pub use lights::view_state::ViewState;
 
 type BoxedRes<T> = Result<T, String>;
 
 fn main() -> BoxedRes<()> {
-    let resource = config::get_config()?;
+    let resource = lights::config::get_config()?;
     let (tx, rx) = crossbeam::channel::unbounded();
     let rabbit_url = resource.borrow().rabbit.url.clone();
     let del = Del { resource, tx };
@@ -26,17 +18,16 @@ fn main() -> BoxedRes<()> {
     let vs = view_state.clone();
     let w = WindowDesc::new(move || {
         let vs = vs.clone();
-        ui_setup::setup_window(vs)
+        lights::ui_setup::setup_window(vs)
     })
     .window_size((480.0, 320.0));
     {
-        let url = rabbit_url.clone();
         std::thread::spawn(move || {
             loop {
                 match rx.recv() {
                     Ok(0) => std::process::exit(0),
                     Ok(code) => {
-                        if let Err(e) = rabbit::send_code(code, &url) {
+                        if let Err(e) = lights::rabbit::send_code(code, &rabbit_url) {
                             eprintln!("failed to send code: {}\n {}", code, e);
                         } else {
                             eprintln!("successfully sent code: {}", code);
