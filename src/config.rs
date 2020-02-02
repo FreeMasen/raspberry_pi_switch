@@ -1,6 +1,6 @@
 #[cfg(feature = "switch")]
 use druid::Data;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use warmy::{toml::Toml, Res, SimpleKey, Store, StoreOpt};
 pub fn get_config() -> Result<Res<Config>, String> {
     let ctx = &mut ();
@@ -29,7 +29,7 @@ pub struct RabbitConfig {
     pub url: String,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Serialize)]
 #[cfg_attr(feature = "switch", derive(Data))]
 pub struct Switch {
     pub name: String,

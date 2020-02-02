@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            html {
+                background: slategray;
+            }
+            body * {
+                font-family: sans-serif;
+                color: white;
+            }
+            .button {
+                border: 0;
+                background: rgba(0, 0, 0, 0.25);
+                width: 100%;
+                height: 50px;
+                font-size: 14pt;
+                border-radius: 5px;
+            }
+            .button:active {
+                background: rgba(0, 0, 0, 0.5);
+            }
+            
+            #switch-container {
+                display: flex;
+                flex-flow: row;
+                justify-content: center;
+                align-content: center;
+                align-items: center;
+                height: 320px;
+            }
+            #switch-container.one-row > .switch-set {
+                height: 320px;
+            }
+            #switch-container.two-col > .switch-set {
+                width: calc(480px / 2);
+            }
+            #switch-container.three-col > .switch-set {
+                width: calc(480px / 3);
+            }
+            #switch-container.two-row > .switch-set {
+                height: 160px;
+            }
+            .switch-set {
+                display: flex;
+                flex-flow: column;
+                align-items: center;
+                align-content: center;
+                justify-content: center;
+                height: 160px;
+                min-width: calc(480px / 3);
+                max-width: calc(480px / 2);
+            }
+            .switch-name {
+                font-size: 18pt;
+            }
+            .button-pair {
+                display: flex;
+                flex-flow: column;
+                justify-content: flex-start;
+                align-items: center;
+                align-content: center;
+                width: calc(100% - 10px);
+                margin-left: 5px;
+                margin-right: 5px;
+                border-radius: 5px;
+            }
+            .off-button {
+                margin-top: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="switch-container">
+
+        </div>
+        <script>
+            function getTestSwitches() {
+                return [
+                    {
+                        "name": "Over head",
+                        "on_code": 11111,
+                        "off_code": 22222,
+                    },
+                    {
+                        "name": "Salt Lamp",
+                        "on_code": 33333,
+                        "off_code": 44444,
+                    },
+                    {
+                        "name": "Corner",
+                        "on_code": 55555,
+                        "off_code": 66666,
+                    }
+                ];
+            }
+            /**
+            * @param switches {{name: string, on_code: number, off_code: number}}
+            */
+            function renderSwitches(switches) {
+                if (typeof switches === 'string') {
+                    switches = JSON.parse(switches);
+                }
+                let container = document.getElementById('switch-container');
+                if (!container) {
+                    throw new Error('Unable to find switch container');
+                }
+                while (container.hasChildNodes()) {
+                    container.removeChild(container.firstChild);
+                }
+                container.classList.remove('one-row', 'two-row', 'two-col', 'three-col');
+                let template = document.getElementById('switch-set-template');
+                if (!template || !template.content) {
+                    throw new Error('Browser doesn\'t support the template element');
+                }
+                let len = switches.length;
+                if (len === 4 || len > 3) {
+                    container.classList.add('two-row');
+                } else {
+                    container.classList.add('one-row');
+                }
+                if (len === 2 || len === 4) {
+                    container.classList.add('two-col')
+                } else {
+                    container.classList.add('three-col');
+                }
+                for (let sw of switches) {
+                    let node = template.content.cloneNode(true);
+                    let label = node.querySelector('.switch-name');
+                    label.innerHTML = sw.name;
+                    let onButton = node.querySelector('.on-button');
+                    onButton.addEventListener('click', () => sendClickMessage(sw.on_code));
+                    let offButton = node.querySelector('.off-button');
+                    offButton.addEventListener('click', () => sendClickMessage(sw.off_code));
+                    container.appendChild(node);
+                }
+            }
+            /**
+            * @param code {number}
+            */
+            function sendClickMessage(code) {
+                window.external.invoke(JSON.stringify({
+                    kind: 'Flip',
+                    data: code,
+                }))
+            }
+            function tick() {
+                window.external.invoke(JSON.stringify({
+                    kind: 'Tick',
+                }))
+                setTimeout(tick, 1000)
+            }
+            (function() {
+                tick();
+            })();
+        </script>
+        <template id="switch-set-template">
+            <div class="switch-set">
+                <label class="switch-name"></label>
+                <div class="button-pair">
+                    <button class="button on-button">On</button>
+                    <button class="button off-button">Off</button>
+                </div>
+            </div>
+        </template>
+    </body>
+</html>

@@ -7,6 +7,8 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-lights = { path = "../../", features = ["switch"] }
-crossbeam = "*"
-druid = "*"
+lights = { path = "../../" }
+web-view = { git = "https://github.com/FreeMasen/web-view", branch = "frameless" }
+warmy = "0.13"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
